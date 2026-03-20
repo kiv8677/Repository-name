@@ -4,13 +4,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4 # تحديث للنسخة الرابعة
+
       - name: Build with Buildozer
         uses: ArtemSerebrennikov/buildozer-action@v1
         with:
           command: buildozer android debug
+
       - name: Upload APK
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4 # تحديث للنسخة الرابعة لحل مشكلة deprecation
         with:
           name: Khazna-APK
           path: bin/*.apk

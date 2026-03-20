@@ -1,20 +1,33 @@
-name: Build APK
+name: Build Android APK
 on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # تحديد نسخة مستقرة من النظام
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip build-essential git python3-setuptools colorama libffi-dev \
+          libssl-dev encoding-mirror unzip libtool autoconf automake libncurses5-dev libncursesw5-dev \
+          zlib1g-dev pkg-config ant openjdk-17-jdk
+
+      - name: Install Buildozer
+        run: |
+          pip3 install --user --upgrade buildozer
+          pip3 install --user --upgrade Cython==0.29.33
 
       - name: Build with Buildozer
-        uses: JaviSerrano/buildozer-action@master # هذا المحرك يعمل حالياً بكفاءة عالية
-        with:
-          command: buildozer android debug
+        run: |
+          export PATH=$PATH:$HOME/.local/bin
+          buildozer android debug || buildozer android debug
+        # ملاحظة: كررنا الأمر لضمان تخطي أي مشكلة تحميل في المرة الأولى
 
-      - name: Upload artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Khazna-App
+          name: Khazna-Final-App
           path: bin/*.apk
+

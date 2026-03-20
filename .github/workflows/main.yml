@@ -1,19 +1,21 @@
-name: Build-Android-APK
-on: [push]
+name: Build APK
+on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Build with Buildozer
-        uses: Niklas-dev/buildozer-action@v1
+        uses: kivy/buildozer-action@master
         with:
           command: buildozer android debug
+          buildozer_version: master
 
-      - name: Upload APK
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Khazna-APK
+          name: Khazna-App
           path: bin/*.apk
+
